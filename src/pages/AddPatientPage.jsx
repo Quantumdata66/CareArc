@@ -12,22 +12,27 @@ export default function AddPatientPage() {
 
 
     const generatePatientId = (patientsArray) => {
-        if (patientsArray.length === 0) return "PAT-0001";
+        if (!patientsArray || patientsArray.length === 0) return "PT-001";
 
-        //To be able to update it, I have to get just the digits
-        const numbers = patientsArray.map(patient => Number(patient.id.split("-")[1]));
+        const numbers = patientsArray
+            .map(patient => {
+                if (!patient?.id) return 0;
+                const match = String(patient.id).match(/\d+/);
+                return match ? parseInt(match[0], 10) : 0;
+            })
+            .filter(n => !isNaN(n) && n > 0);
 
-        //Then I will find the highest existing number
-        const maxNummber = Math.max(...numbers); //so it removes the zeros when getting the max
+        const maxNumber = numbers.length > 0 ? Math.max(...numbers) : 0;
+        let nextDigit = maxNumber + 1;
+        let nextId = `PT-${String(nextDigit).padStart(3, "0")}`;
 
-        //Add 1 to the highest number 
+        const existingIds = new Set(patientsArray.map(p => p.id));
+        while (existingIds.has(nextId)) {
+            nextDigit++;
+            nextId = `PT-${String(nextDigit).padStart(3, "0")}`;
+        }
 
-        const nextDigit = maxNummber + 1
-
-        //Then I will pad with zeros once again...it has to be a string to be padded
-        const nextNumber = String(nextDigit).padStart(4, "0");
-
-        return `PAT-${nextNumber}`;
+        return nextId;
     };
 
     const navigate = useNavigate();

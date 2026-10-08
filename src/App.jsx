@@ -5,7 +5,7 @@ import DashboardLayout from "./pages/DashboardLayout";
 import Dashboard from "./pages/Dashboard"
 import Patients from "./pages/Patients";
 import Appointments from "./pages/Appointments";
-import Settings from "./pages/Setttings";
+import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
 import System from "./pages/System";
 import Notifications from "./pages/Notifications";
