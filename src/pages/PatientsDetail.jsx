@@ -200,7 +200,8 @@ export default function PateintDetail() {
                 </div>
 
                 {/*NAV LINKS*/}
-                <nav className="bg-gray-200 flex flex-row flex-wrap sm:flex-nowrap w-full max-w-sm gap-2 px-2 py-2 mb-7 font-semibold text-gray-500 rounded-xl">
+                <nav className="bg-gray-200 flex flex-row flex-wrap sm:flex-nowrap w-full max-w-md gap-2 px-2 py-2 mb-7 font-semibold text-gray-500 rounded-xl">
+                    <IndividualNavLink to="overview" name="Overview" />
                     <IndividualNavLink to="appointments" name="Appointments" />
                     <IndividualNavLink to="notes" name="Notes" patientNotes={patientNotes} />
                     <IndividualNavLink to="timeline" name="Timeline" />

@@ -15,24 +15,38 @@ export default function RecordVitalsForm({ setIsVitalFormOpen, setVitalsArray, p
     });
 
 
+    const parseOptionalNumber = (val) => {
+        if (val === "" || val === null || val === undefined) return null;
+        const trimmed = typeof val === "string" ? val.trim() : val;
+        if (trimmed === "") return null;
+        const num = Number(trimmed);
+        return Number.isFinite(num) ? num : null;
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        const heartRate = parseOptionalNumber(formData.heartRate);
+        const systolic = parseOptionalNumber(formData.systolic);
+        const diastolic = parseOptionalNumber(formData.diastolic);
+        const oxygen = parseOptionalNumber(formData.oxygen);
+        const temperature = parseOptionalNumber(formData.temperature);
+        const respiratoryRate = parseOptionalNumber(formData.respiratoryRate);
 
         const newVitals = {
             id: `VIT-${Date.now()}`, // A unique ID for the new vital
             patientId: patientId,
             timestamp: new Date().toISOString(), //the date the vital was recorded
 
-            heartRate: Number(formData.heartRate), //converting the string to a number 
-            bloodPressure: {
-                systolic: Number(formData.systolic), //converting the string to a number 
-                diastolic: Number(formData.diastolic), //converting the string to a number 
-            },
-            oxygen: Number(formData.oxygen), //converting the string to a number 
-            temperature: Number(formData.temperature), //converting the string to a number 
-            respiratoryRate: Number(formData.respiratoryRate), //converting the string to a number 
+            heartRate,
+            bloodPressure: (systolic !== null || diastolic !== null)
+                ? { systolic, diastolic }
+                : null,
+            oxygen,
+            temperature,
+            respiratoryRate,
             recordedBy: formData.recordedBy //the staff or doctor who recorded the vital
-        }
+        };
 
         setVitalsArray(prev => [...prev, newVitals]);
         setFormData({
@@ -45,7 +59,6 @@ export default function RecordVitalsForm({ setIsVitalFormOpen, setVitalsArray, p
             recordedBy: ""
         });
         setIsVitalFormOpen(false);
-
     };
 
     return (

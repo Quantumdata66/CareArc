@@ -5,7 +5,7 @@ export const ThresholdContext = createContext();
 const defaultRanges = {
     heartRate: { min: 60, max: 100 },
     bloodPressure: { min: 90, max: 130, systolicMin: 90, systolicMax: 130 },
-    oxygen: { min: 90, max: 95 },
+    oxygen: { min: 95, max: 100 },
     temperature: { min: 35.5, max: 38.0 }
 };
 

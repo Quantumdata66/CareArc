@@ -11,6 +11,7 @@ const DEFAULT_NORMAL_RANGES = {
     oxygen: { min: 95, max: 100 },
     temperature: { min: 36.5, max: 37.5 },
     respiratoryRate: { min: 12, max: 20 },
+    bloodPressure: { min: 90, max: 130, systolicMin: 90, systolicMax: 130, diastolicMin: 60, diastolicMax: 85 },
 };
 
 
@@ -127,11 +128,30 @@ export function derivePatientStatus(deltas, latestVitals, normalRanges = DEFAULT
 
     //checking for out of normal range 
     const outOfRange = Object.entries(latestVitals).some(([key, value]) => {
+        if (key === "bloodPressure" && typeof value === "object" && value !== null) {
+            const range = normalRanges.bloodPressure;
+            if (!range) return false;
+            const sysMin = range.systolicMin ?? range.min;
+            const sysMax = range.systolicMax ?? range.max;
+            const diaMin = range.diastolicMin ?? 60;
+            const diaMax = range.diastolicMax ?? 85;
+
+            const sysOut = typeof value.systolic === "number" && (
+                (sysMin != null && value.systolic < sysMin) ||
+                (sysMax != null && value.systolic > sysMax)
+            );
+            const diaOut = typeof value.diastolic === "number" && (
+                (diaMin != null && value.diastolic < diaMin) ||
+                (diaMax != null && value.diastolic > diaMax)
+            );
+            return sysOut || diaOut;
+        }
+
         const range = normalRanges[key];
         if (!range) return false;
         if (typeof (value) !== "number") return false;
         if (value < range.min || value > range.max) return true; //if out of range
-
+        return false;
     });
 
     //based on these booleans...
